@@ -1,11 +1,17 @@
-const All = ({ todosList, setTodosList }) => {
+import { useTodos, useTodosUpdate } from "../context/TodosProvider";
+
+const All = () => {
+  const todosList = useTodos();
+  const updateTodosList = useTodosUpdate();
+
   const completedTextStyle = "text-lg font-medium line-through";
   const uncompletedTextStyle = "text-lg font-medium";
+
   const handlTodoCompletion = (id) => {
     const updatedList = todosList.map((todo) =>
       todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
     );
-    setTodosList(updatedList);
+    updateTodosList(updatedList);
     localStorage.setItem("todosList", JSON.stringify(updatedList));
   };
   return (

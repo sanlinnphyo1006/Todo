@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 const TabPanel = ({ activeTab, setActiveTab }) => {
   const activeTabStyle = "w-1/2 text-sm font-semibold py-4 cursor-not-allowed";

@@ -1,14 +1,22 @@
+import { useTodos, useTodosUpdate } from "../context/TodosProvider";
+
 import DeleteIcon from "../assets/delete-icon.svg";
 
-const Completed = ({ todosList, setTodosList }) => {
+const Completed = () => {
+  const todosList = useTodos();
+  const updateTodosList = useTodosUpdate();
+  const completedTodosList = todosList.filter((t) => t.isCompleted);
+
   const completedTextStyle = "text-lg font-medium line-through";
+
   const handlTodoCompletion = (id) => {
     const updatedList = todosList.map((todo) =>
       todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
     );
-    setTodosList(updatedList);
+    updateTodosList(updatedList);
     localStorage.setItem("todosList", JSON.stringify(updatedList));
   };
+
   const handleCompleteTodoDeletion = (id, all = false) => {
     let updatedList = [];
     if (all) {
@@ -16,37 +24,35 @@ const Completed = ({ todosList, setTodosList }) => {
     } else {
       updatedList = todosList.filter((todo) => todo.id !== id);
     }
-    setTodosList(updatedList);
+    updateTodosList(updatedList);
     localStorage.setItem("todosList", JSON.stringify(updatedList));
   };
   return (
     <>
-      {todosList
-        .filter((t) => t.isCompleted)
-        .map((todo) => {
-          return (
-            <div
-              key={todo.id}
-              className="w-full shadow-sm py-4 flex items-center justify-between"
+      {completedTodosList.map((todo) => {
+        return (
+          <div
+            key={todo.id}
+            className="w-full shadow-sm py-4 flex items-center justify-between"
+          >
+            <label className="w-full flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                checked={todo.isCompleted}
+                onChange={() => handlTodoCompletion(todo.id)}
+              />
+              <span className={completedTextStyle}>{todo.content}</span>
+            </label>
+            <button
+              aria-label="Delete"
+              onClick={() => handleCompleteTodoDeletion(todo.id)}
             >
-              <label className="w-full flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
-                  checked={todo.isCompleted}
-                  onChange={() => handlTodoCompletion(todo.id)}
-                />
-                <span className={completedTextStyle}>{todo.content}</span>
-              </label>
-              <button
-                aria-label="Delete"
-                onClick={() => handleCompleteTodoDeletion(todo.id)}
-              >
-                <img src={DeleteIcon} />
-              </button>
-            </div>
-          );
-        })}
+              <img src={DeleteIcon} />
+            </button>
+          </div>
+        );
+      })}
 
       {todosList.length > 0 && (
         <button

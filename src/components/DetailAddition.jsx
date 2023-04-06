@@ -1,11 +1,15 @@
 import { useRef } from "react";
 import uuid from "react-uuid";
 
-const DetailAddition = ({ todosList, setTodosList }) => {
+import { useTodosUpdate } from "../context/TodosProvider";
+
+const DetailAddition = () => {
+  const updateTodosList = useTodosUpdate();
   const inputRef = useRef(null);
+
   const handleClick = () => {
     if (inputRef.current && inputRef.current.value) {
-      setTodosList((currentValue) => {
+      updateTodosList((currentValue) => {
         const updatedValue = [
           ...currentValue,
           {
